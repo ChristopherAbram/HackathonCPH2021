@@ -6,6 +6,22 @@ from torch.utils.data import Dataset
 import numpy as np
 
 
+
+class EmbeddedDataset(Dataset):
+
+    def __init__(self, filepath, device):
+        data = np.load(filepath)
+        self.device = device
+        self.sequences = torch.from_numpy(data['seq']).to(device)
+        self.ids = data['ids']
+
+    def __len__(self):
+        return self.ids.size
+
+    def __getitem__(self, index):
+        return self.sequences[index], self.ids[index]
+
+
 class CDRH3MotifDataset(Dataset):
     """
     pyTorch Dataloader conform class,

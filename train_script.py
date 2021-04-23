@@ -4,11 +4,15 @@ train_script.py trains a VAE model on the CDRH3 dataset
 import torch
 from torch.utils.data import DataLoader
 from torch import optim
+import numpy as np
 
 # load our dataset class that handels loading, encoding and accessing
 from Datasets import CDRH3MotifDataset as CDRH3
 # load our VAE model and criterion
 from Models import VaeCdrh3 as Vae, VaeCriterion
+
+
+# data = np.load('seq_repr.npz')
 
 
 DATA_PATH = 'hackathon.csv'
@@ -29,18 +33,20 @@ criterion = VaeCriterion(BATCH_SIZE, len(dataset)).to(DEVICE)
 
 error_min = float('inf')
 for epoch in range(EPOCHS):
-    print('epoch: ', epoch, flush=True)
-    error = 0
+    loss = 0
     for i, (data_point, label, _) in enumerate(data):  # iterate over dataset
         opt.zero_grad()  # set gradient memory to zero
         predict = vae(data_point)  # one forwardpass for current batch
         error = criterion(predict, label)  # callculate error
         # callculate gradient for all parameters with backwardpass
         error.backward()
+        loss += error.item()
         opt.step()  # update step for all parameters
         if i % 10_000 == 0:
-            print('within epoch: ', epoch, 'error: ', error, flush=True)
+            # print('within epoch: ', epoch, 'error: ', error, flush=True)
             if error_min > error:
                 torch.save(vae.state_dict(),
                            f'vaemodel_epoch{epoch}_iter{i}_error{error}.pt')
                 error_min = error
+
+    print('epoch: ', epoch, ', loss=', loss / i, flush=True)

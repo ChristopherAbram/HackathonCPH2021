@@ -19,7 +19,7 @@ from Models import VaeCdrh3 as Vae
 
 
 DATA_PATH = 'hackathon.csv'
-MODEL_PATH = 'vaemodel_epoch298_iter0_error5332.66064453125.pt'
+MODEL_PATH = 'vaemodel_epoch238_iter0_error6083.34912109375.pt'
 LATENT_N = 10
 DEVICE = 'cuda:0'  # change to 'cpu' if training on cpu
 
@@ -38,12 +38,16 @@ with torch.no_grad():
     latent = predict['mu']
     ag = eval_data[2]
 
+# np.save('latent.npy', latent.data.cpu().numpy(), False)
+
 ag_set = set()
 for element in ag:
     ag_set |= {element}
 ag_map = {name: i for i, name in enumerate(ag_set)}
 ag_color = [ag_map[s] for s in ag]
 
+
+# np.save('labels.npy', np.array(ag_color), False)
 
 # VISUALIZATION
 # pca dimension reduction
