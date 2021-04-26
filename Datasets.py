@@ -12,7 +12,7 @@ class EmbeddedDataset(Dataset):
     def __init__(self, filepath, device):
         data = np.load(filepath)
         self.device = device
-        self.sequences = torch.from_numpy(data['seq']).to(device)
+        self.sequences = data['seq']
         self.ids = data['ids']
 
     def __len__(self):
@@ -54,7 +54,7 @@ class CDRH3MotifDataset(Dataset):
             for jdx, letter in enumerate(line[0]):
                 dataset[i, jdx, :] = encoding[letter]
                 labels[i, jdx] = label_encoding[letter]
-                eval_data[i] = line[1]
+                eval_data[i] = line[1] + [line[0]]
 
         # transform numpy array to torch tensor
         # and copy it on the correct device

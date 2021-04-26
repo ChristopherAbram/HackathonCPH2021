@@ -19,11 +19,11 @@ from Models import VaeCdrh3 as Vae
 
 
 DATA_PATH = 'hackathon.csv'
-MODEL_PATH = 'vaemodel_epoch238_iter0_error6083.34912109375.pt'
+MODEL_PATH = 'vaemodel_epoch871_iter0_error4360.81494140625.pt'
 LATENT_N = 10
 DEVICE = 'cuda:0'  # change to 'cpu' if training on cpu
 
-dataset = CDRH3(DATA_PATH, device=DEVICE)
+dataset = CDRH3(DATA_PATH, device=DEVICE) 
 # crate iterator with data
 data = DataLoader(dataset, batch_size=190_000, shuffle=True, num_workers=0,
                   drop_last=False, prefetch_factor=2)
